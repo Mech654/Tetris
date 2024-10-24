@@ -64,8 +64,8 @@ let makePiece = (type) => {
 };
 
 let points = 0;
-let board = makeMatrix(10, 20);
-let dropInter = setInterval(drop, 1000);
+let board = makeMatrix(16, 20);
+let dropInter = setInterval(drop, 500); // Adjusted interval to make the game faster
 let piece = createPiece();
 let playerReset = () => {
     piece = createPiece();
@@ -76,7 +76,8 @@ let playerReset = () => {
 };
 
 function resetGame() {
-    board = makeMatrix(12, 20);
+    console.log('Resetting game');
+    board = makeMatrix(16, 20);
     points = 0;
     updateScore();
     playerReset();
@@ -96,6 +97,7 @@ function createPiece() {
 }
 
 function draw() {
+    console.log('Drawing game');
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawMatrix(board, { x: 0, y: 0 });
     drawMatrix(piece.matrix, piece.pos);
@@ -105,12 +107,22 @@ function drawMatrix(matrix, offset) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value) {
-                context.fillStyle = "red";
+
+                context.fillStyle = "#7F00FF";
                 context.fillRect(x + offset.x, y + offset.y, 1, 1);
             }
         });
     });
 }
+
+function getColor() {
+
+    const r = Math.floor(Math.random() * 156) + 100; // 100-255
+    const g = Math.floor(Math.random() * 156) + 100; // 100-255
+    const b = Math.floor(Math.random() * 156) + 10; // 100-255
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
 
 function merge(board, piece) {
     piece.matrix.forEach((row, y) => {
@@ -137,11 +149,27 @@ function collides(board, piece) {
 }
 
 function rotate(piece) {
-    const temp = piece.matrix;
+    const tempMatrix = piece.matrix; // Store the original matrix
+
+    // Rotate the piece clockwise
     piece.matrix = piece.matrix[0].map((_, index) =>
-        temp.map((row) => row[index]).reverse()
+        tempMatrix.map((row) => row[index]).reverse()
     );
+
+    // Check for collision and out-of-bounds after rotation
+    let offset = 1;
+    while (collides(board, piece)) {
+        piece.pos.x += offset; // Try shifting the piece
+        offset = -(offset + (offset > 0 ? 1 : -1)); // Alternate directions
+        if (offset > piece.matrix[0].length) {
+            // If shifting didn't work, undo rotation
+            piece.matrix = tempMatrix;
+            return;
+        }
+    }
 }
+
+
 
 function drop() {
     piece.pos.y++;
@@ -175,11 +203,13 @@ document.addEventListener("keydown", (event) => {
         if (collides(board, piece)) {
             piece.pos.x++;
         }
+        draw(); // Immediate rendering
     } else if (event.key === "ArrowRight") {
         piece.pos.x++;
         if (collides(board, piece)) {
             piece.pos.x--;
         }
+        draw(); // Immediate rendering
     } else if (event.key === "ArrowDown") {
         drop();
     } else if (event.key === "ArrowUp") {
@@ -187,10 +217,12 @@ document.addEventListener("keydown", (event) => {
         if (collides(board, piece)) {
             rotate(piece); // Rotate back if collision
         }
+        draw(); // Immediate rendering
     }
 });
 
 startButton.addEventListener("click", () => {
+    console.log('Start button clicked');
     resetGame();
     draw();
 });
