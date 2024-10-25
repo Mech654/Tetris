@@ -20,26 +20,26 @@ let makeMatrix = (w, h) => {
 let makePiece = (type) => {
     if (type === "t") {
         return [
-            [0, 5, 0],
-            [5, 5, 5],
+            [0, 1, 0],
+            [1, 1, 1],
             [0, 0, 0],
         ];
     } else if (type === "l") {
         return [
-            [0, 0, 5],
-            [5, 5, 5],
+            [0, 0, 2],
+            [2, 2, 2],
             [0, 0, 0],
         ];
     } else if (type === "j") {
         return [
-            [5, 0, 0],
-            [5, 5, 5],
+            [3, 0, 0],
+            [3, 3, 3],
             [0, 0, 0],
         ];
     } else if (type === "o") {
         return [
-            [5, 5],
-            [5, 5],
+            [4, 4],
+            [4, 4],
         ];
     } else if (type === "i") {
         return [
@@ -50,18 +50,52 @@ let makePiece = (type) => {
         ];
     } else if (type === "s") {
         return [
-            [0, 5, 5],
-            [5, 5, 0],
+            [0, 6, 6],
+            [6, 6, 0],
             [0, 0, 0],
         ];
     } else if (type === "z") {
         return [
-            [5, 5, 0],
-            [0, 5, 5],
+            [7, 7, 0],
+            [0, 7, 7],
             [0, 0, 0],
+        ];
+    } else if (type === "x") {  // New cross shape
+        return [
+            [0, 8, 0],
+            [8, 8, 8],
+            [0, 8, 0],
+        ];
+    } else if (type === "u") {  // New U shape
+        return [
+            [9, 0, 9],
+            [9, 0, 9],
+            [9, 9, 9],
+        ];
+    } else if (type === "w") {  // New W shape
+        return [
+            [10, 0, 10],
+            [0, 10, 10],
+            [10, 10, 0],
+        ];
+    } else if (type === "f") {  // New F shape
+        return [
+            [11, 11, 0],
+            [11, 0, 0],
+            [11, 11, 11],
+        ];
+    } else if (type === "v") {  // New V shape
+        return [
+            [12, 0, 12],
+            [12, 0, 12],
+            [0, 12, 0],
         ];
     }
 };
+
+// "ijlostzqxuwfv"
+
+
 
 let points = 0;
 let board = makeMatrix(16, 20);
@@ -89,7 +123,7 @@ function updateScore() {
 }
 
 function createPiece() {
-    const pieces = "ijlostz";
+    const pieces = "ijlostzqxuwfv";
     return {
         matrix: makePiece(pieces[Math.floor(Math.random() * pieces.length)]),
         pos: { x: 4, y: 0 },
@@ -198,21 +232,21 @@ function clearRows() {
 }
 
 document.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowLeft") {
+    if (event.key === "ArrowLeft" || event.key === "a") {
         piece.pos.x--;
         if (collides(board, piece)) {
             piece.pos.x++;
         }
         draw(); // Immediate rendering
-    } else if (event.key === "ArrowRight") {
+    } else if (event.key === "ArrowRight" || event.key === "d") {
         piece.pos.x++;
         if (collides(board, piece)) {
             piece.pos.x--;
         }
         draw(); // Immediate rendering
-    } else if (event.key === "ArrowDown") {
+    } else if (event.key === "ArrowDown" || event.key === "s") {
         drop();
-    } else if (event.key === "ArrowUp") {
+    } else if (event.key === "ArrowUp" || event.key === "w") {
         rotate(piece);
         if (collides(board, piece)) {
             rotate(piece); // Rotate back if collision
