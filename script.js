@@ -18,80 +18,71 @@ let makeMatrix = (w, h) => {
 };
 
 let makePiece = (type) => {
-    if (type === "t") {
-        return [
+    const pieces = {
+        t: [
             [0, 1, 0],
             [1, 1, 1],
             [0, 0, 0],
-        ];
-    } else if (type === "l") {
-        return [
+        ],
+        l: [
             [0, 0, 2],
             [2, 2, 2],
             [0, 0, 0],
-        ];
-    } else if (type === "j") {
-        return [
+        ],
+        j: [
             [3, 0, 0],
             [3, 3, 3],
             [0, 0, 0],
-        ];
-    } else if (type === "o") {
-        return [
+        ],
+        o: [
             [4, 4],
             [4, 4],
-        ];
-    } else if (type === "i") {
-        return [
+        ],
+        i: [
             [0, 5, 0, 0],
             [0, 5, 0, 0],
             [0, 5, 0, 0],
             [0, 5, 0, 0],
-        ];
-    } else if (type === "s") {
-        return [
+        ],
+        s: [
             [0, 6, 6],
             [6, 6, 0],
             [0, 0, 0],
-        ];
-    } else if (type === "z") {
-        return [
+        ],
+        z: [
             [7, 7, 0],
             [0, 7, 7],
             [0, 0, 0],
-        ];
-    } else if (type === "x") {  // New cross shape
-        return [
+        ],
+        x: [
             [0, 8, 0],
             [8, 8, 8],
             [0, 8, 0],
-        ];
-    } else if (type === "u") {  // New U shape
-        return [
+        ],
+        u: [
             [9, 0, 9],
             [9, 0, 9],
             [9, 9, 9],
-        ];
-    } else if (type === "w") {  // New W shape
-        return [
+        ],
+        w: [
             [10, 0, 10],
             [0, 10, 10],
             [10, 10, 0],
-        ];
-    } else if (type === "f") {  // New F shape
-        return [
+        ],
+        f: [
             [11, 11, 0],
             [11, 0, 0],
             [11, 11, 11],
-        ];
-    } else if (type === "v") {  // New V shape
-        return [
+        ],
+        v: [
             [12, 0, 12],
             [12, 0, 12],
             [0, 12, 0],
-        ];
-    }
+        ],
+    };
+    return pieces[type] || console.log("null type: " + type);
 };
+
 
 // "ijlostzqxuwfv"
 
@@ -123,7 +114,7 @@ function updateScore() {
 }
 
 function createPiece() {
-    const pieces = "ijlostzqxuwfv";
+    const pieces = "ijlostzxuwfv";
     return {
         matrix: makePiece(pieces[Math.floor(Math.random() * pieces.length)]),
         pos: { x: 4, y: 0 },
